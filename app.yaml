@@ -1,0 +1,15 @@
+application: toonable 
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /www
+  static_dir: www 
+
+- url: /favicon.ico
+  static_files: www/favicon.ico
+  upload: www/favicon.ico
+
+- url: .*
+  script: toonable.py 

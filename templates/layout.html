@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Simple Notepad</title>
+		<link href="/www/css/tripoli/tripoli.css" type="text/css" rel="stylesheet"> 
+		<!--[if IE]><link rel="stylesheet" type="text/css" href="/www/css/tripoli/tripoli.ie.css"><![endif]--> 
+		<link href="/www/css/simplenotepad.css" type="text/css" rel="stylesheet"> 
+
+		{% block head-links %}{% endblock %}
+		<link rel="shortcut icon" href="/www/images/favicon.ico">
+
+		<script type="text/javascript" src="/www/js/jquery.js"></script>
+		<script type="text/javascript" src="/www/js/simplenotepad.js"></script>
+		{% block head %}{% endblock %}
+
+	</head>
+
+	<body class="l1 wide equal">
+		<div id="container">
+			<div id="header">
+				{% block header %} default header stuff {% endblock %}
+			</div>
+			<a id="maincontent" name="maincontent"></a>
+			{% block content %}default content{% endblock %}
+			<div id="footer">
+				{% block footer %} default header stuff {% endblock %}
+			</div>
+		</div>
+	</body>
+
+</html>
