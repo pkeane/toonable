@@ -21,7 +21,7 @@ class Todo(db.Model):
   """Represents a single todo.
   """
   text = db.StringProperty(required=True)
-  priority = db.StringProperty(required=True,choices = set(["asap","soon","sometime"]))
+  priority = db.StringProperty(required=True,choices = set(["1asap","2soon","3sometime"]))
   created = db.DateTimeProperty(auto_now_add=True)
 
 class BaseRequestHandler(webapp.RequestHandler):
