@@ -80,6 +80,7 @@ input[type='text'] {
 #footer{
 	background:#525252;
 	height: 3em;
+	padding: 3px;
 }
 
 ul {
@@ -103,12 +104,12 @@ li a.delete {
 	font-size: 7px;
 }
 
-li a.1asap {
+li a.a1asap {
 	color: #fff;
 }
-li a.2soon {
-	color: #aaa;
+li a.a2soon {
+	color: #555;
 }
-li a.3sometime {
-	color: #666;
+li a.a3sometime {
+	color: #999;
 }

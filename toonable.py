@@ -21,7 +21,7 @@ class Todo(db.Model):
   """Represents a single todo.
   """
   text = db.StringProperty(required=True)
-  priority = db.StringProperty(required=True,choices = set(["1asap","2soon","3sometime"]))
+  priority = db.StringProperty(required=True,choices = set(["a1asap","a2soon","a3sometime"]))
   created = db.DateTimeProperty(auto_now_add=True)
 
 class BaseRequestHandler(webapp.RequestHandler):
@@ -50,7 +50,7 @@ class TodosPage(BaseRequestHandler):
 
   @login_required
   def get(self):
-      todos = db.GqlQuery("SELECT * from Todo ORDER BY created DESC");
+      todos = db.GqlQuery("SELECT * from Todo ORDER BY priority");
       self.generate('index.html', {
           'todos': todos,
       })
