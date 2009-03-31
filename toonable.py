@@ -64,18 +64,10 @@ class TodosPage(BaseRequestHandler):
       self.redirect('/')
 
 class TodoPage(BaseRequestHandler):
-  def get(self,slug=0):
-      todos = db.GqlQuery("SELECT * from Todo ORDER BY created DESC");
-      q = Todo.all()
-      q.filter('slug =',slug) 
-      md = markdown.Markdown()
-      res = q.fetch(1)
-      for todo in res:
-          self.generate('todo.html', {
-              'todo_title': todo.todo_title,
-              'todo_text': md.convert(todo.todo_text),
-              'todos': todos,
-          })
+  def delete(self,key=''):
+      todo = Todo.get(key);
+      todo.delete()
+      self.redirect('/')
 
 def main():
   application = webapp.WSGIApplication([

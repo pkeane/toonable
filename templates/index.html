@@ -37,7 +37,7 @@
 
 <div id="secondary">
 	<div class="content">
-		<ul>
+		<ul id="todos">
 			{% for t in todos %}
 			<li>
 			<a href="todo/{{ t.key }}" class="{{ t.priority }}">{{ t.text }}</a> 
@@ -58,11 +58,11 @@
 				<input type="text" name="text" id="name">
 				</p>
 				<label for="asap">asap</label>
-				<input type="radio" id="asap" name="priority" value="asap">
+				<input type="radio" id="asap" name="priority" value="1asap">
 				<label for="soon">soon</label>
-				<input type="radio" id="soon" name="priority" value="soon" checked>
+				<input type="radio" id="soon" name="priority" value="2soon" checked>
 				<label for="sometime">sometime</label>
-				<input type="radio" id="sometime" name="priority" value="sometime">
+				<input type="radio" id="sometime" name="priority" value="3sometime">
 			</fieldset>
 			<p>
 			<input type="submit" value="add">

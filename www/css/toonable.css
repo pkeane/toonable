@@ -103,12 +103,12 @@ li a.delete {
 	font-size: 7px;
 }
 
-li a.asap {
-	color: #f00;
+li a.1asap {
+	color: #fff;
 }
-li a.soon {
-	color: #0f0;
+li a.2soon {
+	color: #aaa;
 }
-li a.sometime {
-	color: #00f;
+li a.3sometime {
+	color: #666;
 }

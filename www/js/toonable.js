@@ -1,12 +1,12 @@
-Tea = {};
+Toonable = {};
 
 
 $(document).ready(function() {
-	Tea.initDelete();
+	Toonable.initDelete();
 });
 
 
-Tea.initDelete = function() {
+Toonable.initDelete = function() {
 	$('#todos').find("a[class='delete']").click(function() {
 		if (confirm('are you sure?')) {
 			var del_o = {
