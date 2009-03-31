@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import datetime
-import markdown
 import os
 import random
 import re
@@ -18,22 +17,12 @@ from google.appengine.ext.webapp.util import login_required
 # Set to true if we want to have our webapp print stack traces, etc
 _DEBUG = True
 
-def slugify(inStr):
-    removelist = ["a", "an", "as", "at", "before", "but", "by", "for","from","is", "in", "into", "like", "of", "off", "on", "onto","per","since", "than", "the", "this", "that", "to", "up", "via","with"];
-    for a in removelist:
-        aslug = re.sub(r'\b'+a+r'\b','',inStr)
-    aslug = re.sub('[^\w\s-]', '', aslug).strip().lower()
-    aslug = re.sub('\s+', '-', aslug)
-    return aslug
-
 class Todo(db.Model):
   """Represents a single todo.
   """
-  todo_title = db.TextProperty(required=True)
-  todo_text = db.TextProperty(required=True)
-  slug = db.StringProperty()
+  text = db.StringProperty(required=True)
+  priority = db.StringProperty(required=True,choices = set(["asap","soon","sometime"]))
   created = db.DateTimeProperty(auto_now_add=True)
-  updated = db.DateTimeProperty(auto_now=True)
 
 class BaseRequestHandler(webapp.RequestHandler):
   """Supplies a common template generation function.
@@ -49,7 +38,7 @@ class BaseRequestHandler(webapp.RequestHandler):
       'login_url': users.CreateLoginURL(self.request.uri),
       'logout_url': users.CreateLogoutURL('http://' + self.request.host + '/'),
       'debug': self.request.get('deb'),
-      'application_name': 'Simple Todopad',
+      'application_name': 'Toonable Tasks',
     }
     values.update(template_values)
     directory = os.path.dirname(__file__)
@@ -60,52 +49,19 @@ class TodosPage(BaseRequestHandler):
   """Lists the todos """
 
   @login_required
-  def get(self,id=0):
+  def get(self):
       todos = db.GqlQuery("SELECT * from Todo ORDER BY created DESC");
       self.generate('index.html', {
           'todos': todos,
       })
 
   def post(self):
-      todo_title = self.request.get('todo_title')
-      todo_text =  self.request.get('todo_text')
-      slug = slugify(todo_title) 
-      if (todo_text and todo_title):
-          record = Todo(todo_title=todo_title,todo_text=todo_text,slug=slug);
+      text = self.request.get('text')
+      priority =  self.request.get('priority')
+      if (text and priority):
+          record = Todo(text=text,priority=priority);
           record.put()
       self.redirect('/')
-
-class TodoEditPage(BaseRequestHandler):
-  @login_required
-  def get(self,key=0):
-      todos = db.GqlQuery("SELECT * from Todo ORDER BY created DESC");
-      todo = Todo.get(key)
-      self.generate('edit.html', {
-          'todo_title': todo.todo_title,
-          'todo_text': todo.todo_text,
-          'todo_key': key,
-          'todos' : todos,
-      })
-
-  def post(self,key=0):
-      todo = Todo.get(key)
-      todo.todo_title = self.request.get('todo_title')
-      todo.todo_text =  self.request.get('todo_text')
-      todo.slug = slugify(todo.todo_title) 
-      todo.put()
-      self.redirect('/todo/'+todo.slug)
-
-class TodoTextPage(BaseRequestHandler):
-  def get(self,slug=0):
-      q = Todo.all()
-      q.filter('slug =',slug) 
-      md = markdown.Markdown()
-      res = q.fetch(1)
-      for todo in res:
-          self.generate('todo_text.html', {
-              'todo_title': todo.todo_title,
-              'todo_text': md.convert(todo.todo_text),
-          })
 
 class TodoPage(BaseRequestHandler):
   def get(self,slug=0):
@@ -125,8 +81,6 @@ def main():
   application = webapp.WSGIApplication([
     ('/', TodosPage),
     ('/todos', TodosPage),
-    ('/edit/(.*)', TodoEditPage),
-    ('/text/(.*)', TodoTextPage),
     ('/todo/(.*)', TodoPage),
   ], debug=_DEBUG)
   wsgiref.handlers.CGIHandler().run(application)

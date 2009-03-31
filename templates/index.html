@@ -4,7 +4,7 @@
 
 {% block header %}
 <div class="login content">
-	<h1><a href="/">Simple Notepad</a></h1>
+	<h1><a href="/">Toonable Tasks</a></h1>
 	{% if user %}
 	<span class="item nickname">{{ user.nickname }}</span> |
 	<span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
@@ -17,84 +17,61 @@
 {% block content %}
 <div id="primary">
 	<div class="content">
-		<form method="post" action="notes">
-			<label for="note_text">text</label>
-			<textarea name="note_text" id="note_text"></textarea>
-			<label for="note_title">title</label>
-			<input type="text" id="note_title" name="note_title">
+		<ul>
+			<li><a href="http://my.safaribooksonline.com">safari books</a></li>
+			<li><a href="http://necronomicorp.com/l-space/">l-space</a></li>
+			<li><a href="http://quickdraw.laits.utexas.edu/dase1">dase dev</a></li>
+			<li><a href="https://liberalartsits.seework.com/clients">basecamp</a></li>
+			<li><a href="http://nytimes.com">nytimes</a></li>
+			<li><a href="http://reddit.com/r/programming">reddit</a></li>
+			<li><a href="http://news.ycombinator.com">hacker news</a></li>
+			<li><a href="http://del.icio.us/network/pkeane">del.icio.us network</a></li>
+			<li><a href="http://twitter.com">twitters</a></li>
+			<li><a href="https://utdirect.utexas.edu/pntime/">timesheets</a></li>
+			<li><a href="http://atompub.org/rfc4287.html">Atom Syndication Format</a></li>
+			<li><a href="http://bitworking.org/projects/atom/rfc5023.html">Atom Publishing Protocol</a></li>
+			<li><a href="https://postgres.laits.utexas.edu/phppgadmin">pg</a></li>
+		</ul>
+	</div>
+</div>
+
+<div id="secondary">
+	<div class="content">
+		<ul>
+			{% for t in todos %}
+			<li>
+			<a href="todo/{{ t.key }}" class="{{ t.priority }}">{{ t.text }}</a> 
+			<a href="todo/{{ t.key }}" class="delete">[X]</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+
+<div id="tertiary">
+	<div class="content">
+		<form action="todos" method="post">
+
+			<fieldset>
+				<legend>new to do</legend>
+				<p>
+				<input type="text" name="text" id="name">
+				</p>
+				<label for="asap">asap</label>
+				<input type="radio" id="asap" name="priority" value="asap">
+				<label for="soon">soon</label>
+				<input type="radio" id="soon" name="priority" value="soon" checked>
+				<label for="sometime">sometime</label>
+				<input type="radio" id="sometime" name="priority" value="sometime">
+			</fieldset>
 			<p>
-			<input type="submit" value="save">
+			<input type="submit" value="add">
 			</p>
 		</form>
-<pre>
-Markdown Cheat Sheet
-
-# Header 1 #
-## Header 2 ##
-### Header 3 ###             (Hashes on right are optional)
-#### Header 4 ####
-##### Header 5 #####
-
-This is a paragraph, which is text surrounded by whitespace.
-Paragraphs can be on one line (or many), and can drone on
-for hours.  
-
-Here is a Markdown link to [Warped](http://warpedvisions.org), 
-and a literal <http://link.com/>.  Now some SimpleLinks, like 
-one to <a rel="tag" target="_new" href="http://google.com/search?q=google&amp;btnI=">google</a> (autolinks to are-you-feeling-lucky), a <a rel="tag" target="_new" href="http://en.wikipedia.org/wiki/Test">test</a> 
-link to a Wikipedia page, and a <a rel="tag" target="_new" href="http://foldoc.doc.ic.ac.uk/foldoc/foldoc.cgi?query=cpu&amp;action=Search">CPU</a> at foldoc. 
-
-Now some inline markup like _italics_,  **bold**, and `code()`.
-
-![picture alt](/images/photo.jpeg "Title is optional")     
-
-> Blockquotes are like quoted text in email replies
->> And, they can be nested
-
-* Bullet lists are easy too
-- Another one
-+ Another one
-
-1. A numbered list
-2. Which is numbered
-3. With periods and a space
-
-And now some code:
-
-	// Code is just text indented a bit
-	which(is_easy) to_remember();
-
-Text with  
-two trailing spaces  
-(on the right)  
-can be used  
-for things like poems  
-
-Some horizontal rules ...
-
-* * * *
-****
---------------------------
-</pre>
-
-		</div>
 	</div>
+</div>
 
-	<div id="secondary">
-		<div class="content">
-			<ul>
-				{% for n in notes %}
-				<li>
-				<a href="note/{{ n.slug }}">{{ n.note_title }}</a> |
-				<a href="text/{{ n.slug }}">text</a> 
-				<a href="edit/{{ n.key }}" class="delete">edit</a>
-				</li>
-				{% endfor %}
-			</ul>
-		</div>
-	</div>
+{% endblock %}
 
-	{% endblock %}
-
-	{% block footer %}
-	{% endblock %}
+{% block footer %}
+{% endblock %}

@@ -1,45 +1,44 @@
 body {
+	/*
+	background: url('../images/teacup.svg.png');
+	*/
 }
 
 h1 {
 	color: #fff;
 }
 
+h3 {
+	color: #090501;
+}
+
 h3.alert {
 	color: red;
 }
 
-pre {
-	color: #666;
-	padding: 12px;
-	background: #eee;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
-	margin-top: 2px;
+label {
+	font-weight: bold;
+	color: #fff;
 }
 
-pre code {
-	width: 400px;
-	white-space: pre-wrap; 
+input[type='text'] {
+	margin-bottom: 10px;
 }
 
-div.text {
-width: 720px;
-margin: 12px auto;
-}
-
-
+/* 525252 | 8a571a | e0a45c | 090501 */
 #header {
-	background:#6699ff;
+	padding: 1em;
+	background:#090501; 
+	color: #aaa;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
+	margin-bottom: 2px; 
 	margin-top: 2px;
-	padding: 4px;
 }
 
 #header a {
-	color: #fff;
 	text-decoration: none;
+	color: #fff;
 }
 
 #header .content,#footer .content {
@@ -48,48 +47,34 @@ margin: 12px auto;
 	padding:0;
 }
 
-body.l1 #secondary {
-	width: 20em;
-	background:#eeeeee;
+#secondary {
+	background:#e0a45c;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
-	margin-top: 2px; 
+	margin-bottom: 2px; 
+}
+
+#tertiary {
+	background:#8a571a;
+	color:white;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	margin-bottom: 2px; 
 }
 
 #secondary .content {
-	padding: 1em; 
+	margin: 1em 0em
 }
 
-body.l1 #primary {
-	width: 55em;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
-	margin-top: 2px; 
-}
-
-#primary h1 {
-	color: black;
+#tertiary .content {
+	margin:1em
 }
 
 #primary .content {
-	padding: 1em; 
-}
-
-#primary label {
-	display: block;
-	color: #003;
-	font-weight: bold;
-}
-
-#primary textarea {
-	color: #003;
-	width: 100%;
-	height: 32em;
-}
-
-#primary input[type="text"] {
-	width: 100%;
-	margin-bottom: 10px;
+	margin:1em 0;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	margin-bottom: 2px; 
 }
 
 #footer{
@@ -118,12 +103,12 @@ li a.delete {
 	font-size: 7px;
 }
 
-li a.p1 {
-	color: #000;
+li a.asap {
+	color: #f00;
 }
-li a.p2 {
-	color: #444;
+li a.soon {
+	color: #0f0;
 }
-li a.p3 {
-	color: #888;
+li a.sometime {
+	color: #00f;
 }
