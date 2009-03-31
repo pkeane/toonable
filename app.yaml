@@ -7,9 +7,5 @@ handlers:
 - url: /www
   static_dir: www 
 
-- url: /favicon.ico
-  static_files: www/favicon.ico
-  upload: www/favicon.ico
-
 - url: .*
   script: toonable.py 

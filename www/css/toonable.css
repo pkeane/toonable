@@ -105,10 +105,10 @@ li a.delete {
 }
 
 li a.a1asap {
-	color: #fff;
+	color: #000;
 }
 li a.a2soon {
-	color: #555;
+	color: #ddd;
 }
 li a.a3sometime {
 	color: #999;
