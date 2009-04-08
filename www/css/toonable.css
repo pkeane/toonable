@@ -9,7 +9,7 @@ h1 {
 }
 
 h3 {
-	color: #090501;
+	color: #000;
 }
 
 h3.alert {
@@ -28,7 +28,7 @@ input[type='text'] {
 /* 525252 | 8a571a | e0a45c | 090501 */
 #header {
 	padding: 1em;
-	background:#090501; 
+	background:#000; 
 	color: #aaa;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
@@ -48,14 +48,14 @@ input[type='text'] {
 }
 
 #secondary {
-	background:#e0a45c;
+	background:#eee;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
 	margin-bottom: 2px; 
 }
 
 #tertiary {
-	background:#8a571a;
+	background:#ccc;
 	color:white;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
@@ -78,7 +78,7 @@ input[type='text'] {
 }
 
 #footer{
-	background:#525252;
+	background:#aaa;
 	height: 3em;
 	padding: 3px;
 }
