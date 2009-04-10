@@ -25,15 +25,31 @@ input[type='text'] {
 	margin-bottom: 10px;
 }
 
+#container {
+	margin: 8px 5px;
+}
+
+table {
+	width: 100%;
+	border-spacing: 8px;
+}
+
+table td {
+	width: 30%;
+	vertical-align: top;
+	font-size: 1.2em;
+	line-height: 1.3em;
+}
+
 /* 525252 | 8a571a | e0a45c | 090501 */
 #header {
-	padding: 1em;
+	padding: 3px;
 	background:#000; 
+	background:#600; 
 	color: #aaa;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
-	margin-bottom: 2px; 
-	margin-top: 2px;
+	margin: 0px 8px;
 }
 
 #header a {
@@ -47,40 +63,40 @@ input[type='text'] {
 	padding:0;
 }
 
-#secondary {
-	background:#eee;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
-	margin-bottom: 2px; 
-}
-
-#tertiary {
+td.left {
+	padding: 1em;
 	background:#ccc;
-	color:white;
 	-moz-border-radius: 5px; 
 	-webkit-border-radius: 5px; 
 	margin-bottom: 2px; 
 }
 
-#secondary .content {
-	margin: 1em 0em
+td.center {
+	padding: 1em;
+	background:#ddd;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	margin-bottom: 2px; 
+}
+
+td.right {
+	padding: 1em;
+	background:#999;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	margin-bottom: 2px; 
 }
 
 #tertiary .content {
 	margin:1em
 }
 
-#primary .content {
-	margin:1em 0;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
-	margin-bottom: 2px; 
+form p {
+	margin: 10px 0px;
 }
 
-#footer{
-	background:#aaa;
-	height: 3em;
-	padding: 3px;
+form fieldset {
+ padding: 10px;	
 }
 
 ul {
@@ -108,8 +124,8 @@ li a.a1asap {
 	color: #000;
 }
 li a.a2soon {
-	color: #ddd;
+	color: #666;
 }
 li a.a3sometime {
-	color: #999;
+	color: #fff;
 }
