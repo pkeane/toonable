@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import atomlib.atom03
 import datetime
 import os
 import random
@@ -50,7 +51,8 @@ class TodosPage(BaseRequestHandler):
 
   @login_required
   def get(self):
-      todos = db.GqlQuery("SELECT * from Todo ORDER BY priority");
+      todos = db.GqlQuery("SELECT * from Todo ORDER BY priority")
+      #use oauth here
       self.generate('index.html', {
           'todos': todos,
       })
