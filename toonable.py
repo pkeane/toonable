@@ -9,7 +9,6 @@ import string
 import sys
 import wsgiref.handlers
 
-from oauth import client
 import time
 import oauth.oauth as oauth 
 
@@ -100,7 +99,7 @@ class OAuthPage(BaseRequestHandler):
     url = oauth_request.to_url() 
     result = urlfetch.fetch(url)
     if result.status_code == 200:
-        print result.content
+        self.response.out.write(oauth.OAuthToken.from_string(result.content))
 
 def main():
   application = webapp.WSGIApplication([
