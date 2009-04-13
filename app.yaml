@@ -9,7 +9,6 @@ handlers:
 
 - url: .*
   script: toonable.py 
-#  script: oauth.py
 
 #- url: .*
 #  script: toonable.py 

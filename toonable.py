@@ -9,6 +9,11 @@ import string
 import sys
 import wsgiref.handlers
 
+from oauth import client
+import time
+import oauth.oauth as oauth 
+
+from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
@@ -66,16 +71,43 @@ class TodosPage(BaseRequestHandler):
       self.redirect('/')
 
 class TodoPage(BaseRequestHandler):
+
   def delete(self,key=''):
       todo = Todo.get(key);
       todo.delete()
       self.redirect('/')
+
+class OAuthPage(BaseRequestHandler):
+
+  def get(self):
+    SERVER = 'www.google.com'
+    PORT = 80
+    REQUEST_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetRequestToken'
+    ACCESS_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetAccessToken'
+    AUTHORIZATION_URL = 'https://www.google.com/accounts/OAuthAuthorizeToken'
+    CALLBACK_URL = 'http://toonable.appspot.com'
+    RESOURCE_URL = 'https://mail.google.com/mail/feed/atom'
+    SCOPE = 'https://mail.google.com/mail/feed/atom'
+    CONSUMER_KEY = 'toonable.appspot.com'  
+    CONSUMER_SECRET = 'NdT5Uuut1ze6HYyRfFa+J3i0'
+    scope = {'scope':SCOPE}
+    consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
+    oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
+                                                               token=None,
+                                                               http_url=REQUEST_TOKEN_URL,parameters=scope)
+    signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
+    oauth_request.sign_request(signature_method, consumer, None)
+    url = oauth_request.to_url() 
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+        print result.content
 
 def main():
   application = webapp.WSGIApplication([
     ('/', TodosPage),
     ('/todos', TodosPage),
     ('/todo/(.*)', TodoPage),
+    ('/oauth', OAuthPage),
   ], debug=_DEBUG)
   wsgiref.handlers.CGIHandler().run(application)
 
