@@ -64,5 +64,20 @@
 			</form>
 		</td>
 	</tr>
+	<tr>
+		<td class="left">
+		</td>
+		<td class="center">
+			<h3>{{ mail_feed.title }}</h3>
+			<dl id="mail">
+				{% for entry in mail_feed.entries %}
+				<dt><a href="{{ entry.alt }}">{{ entry.title }}</a></dt>
+				</dd>{{ entry.summary }}</dd>
+				{% endfor %}
+			</dl>
+		</td>
+		<td class="right">
+		</td>
+	</tr>
 </table>
 {% endblock %}

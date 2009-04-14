@@ -22,12 +22,28 @@ from google.appengine.ext.webapp.util import login_required
 # Set to true if we want to have our webapp print stack traces, etc
 _DEBUG = True
 
+REQUEST_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetRequestToken'
+ACCESS_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetAccessToken'
+AUTHORIZATION_URL = 'https://www.google.com/accounts/OAuthAuthorizeToken'
+CALLBACK_URL = 'http://toonable.appspot.com/oauth/token_ready'
+RESOURCE_URL = 'https://mail.google.com/mail/feed/atom'
+SCOPE = 'https://mail.google.com/mail/feed/atom'
+CONSUMER_KEY = 'toonable.appspot.com'  
+CONSUMER_SECRET = 'NdT5Uuut1ze6HYyRfFa+J3i0'
+
 class Todo(db.Model):
   """Represents a single todo.
   """
   text = db.StringProperty(required=True)
   priority = db.StringProperty(required=True,choices = set(["a1asap","a2soon","a3sometime"]))
   created = db.DateTimeProperty(auto_now_add=True)
+
+class OAuthToken(db.Model):
+    user = db.UserProperty()
+    token_key = db.StringProperty(required=True)
+    token_secret = db.StringProperty(required=True)
+    type = db.StringProperty(required=True)
+    scope = db.StringProperty(required=True)
 
 class BaseRequestHandler(webapp.RequestHandler):
   """Supplies a common template generation function.
@@ -55,10 +71,34 @@ class TodosPage(BaseRequestHandler):
 
   @login_required
   def get(self):
+      mail_feed = ''
+      t = OAuthToken.all()
+      t.filter("user =",users.GetCurrentUser())
+      t.filter("scope =", SCOPE)
+      t.filter("type =", 'access')
+      results = t.fetch(1)
+      for oauth_token in results:
+          if oauth_token.token_key:
+              key = oauth_token.token_key
+              mail_feed = oauth_token.token_key
+              secret = oauth_token.token_secret
+              token = oauth.OAuthToken(key,secret)
+              consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
+              oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
+                                                                         token=token,
+                                                                         http_url=SCOPE)
+              signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
+              oauth_request.sign_request(signature_method, consumer, token)
+              result = urlfetch.fetch(url=SCOPE,
+                                      method=urlfetch.GET,
+                                      headers=oauth_request.to_header())
+              mail_feed = atomlib.atom03.Atom.from_text(result.content) 
+      if not oauth_token:
+          self.redirect('/oauth')
       todos = db.GqlQuery("SELECT * from Todo ORDER BY priority")
-      #use oauth here
       self.generate('index.html', {
           'todos': todos,
+          'mail_feed' : mail_feed,
       })
 
   def post(self):
@@ -79,16 +119,6 @@ class TodoPage(BaseRequestHandler):
 class OAuthPage(BaseRequestHandler):
 
   def get(self):
-    SERVER = 'www.google.com'
-    PORT = 80
-    REQUEST_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetRequestToken'
-    ACCESS_TOKEN_URL = 'https://www.google.com/accounts/OAuthGetAccessToken'
-    AUTHORIZATION_URL = 'https://www.google.com/accounts/OAuthAuthorizeToken'
-    CALLBACK_URL = 'http://toonable.appspot.com'
-    RESOURCE_URL = 'https://mail.google.com/mail/feed/atom'
-    SCOPE = 'https://mail.google.com/mail/feed/atom'
-    CONSUMER_KEY = 'toonable.appspot.com'  
-    CONSUMER_SECRET = 'NdT5Uuut1ze6HYyRfFa+J3i0'
     scope = {'scope':SCOPE}
     consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
@@ -99,7 +129,61 @@ class OAuthPage(BaseRequestHandler):
     url = oauth_request.to_url() 
     result = urlfetch.fetch(url)
     if result.status_code == 200:
-        self.response.out.write(oauth.OAuthToken.from_string(result.content))
+        token = oauth.OAuthToken.from_string(result.content) 
+        #persist token
+        saved_token = OAuthToken(user=users.GetCurrentUser(),
+                                 token_key = token.key,
+                                 token_secret = token.secret,
+                                 scope = SCOPE,
+                                 type = 'request',
+                                )
+        saved_token.put()
+        #now authorize token
+        oauth_request = oauth.OAuthRequest.from_token_and_callback(token=token,
+                                                                   callback=CALLBACK_URL,
+                                                                  http_url=AUTHORIZATION_URL)
+        url = oauth_request.to_url() 
+        self.redirect(url)
+    else:
+      self.response.out.write('no request token')
+
+
+class OAuthReadyPage(BaseRequestHandler):
+
+  def get(self):
+      t = OAuthToken.all()
+      t.filter("user =",users.GetCurrentUser())
+      t.filter("token_key =", self.request.get('oauth_token'))
+      t.filter("scope =", SCOPE)
+      t.filter("type =", 'request')
+      results = t.fetch(1)
+      for oauth_token in results:
+          if oauth_token.token_key:
+              key = oauth_token.token_key
+              secret = oauth_token.token_secret
+              token = oauth.OAuthToken(key,secret)
+              #get access token
+              consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
+              oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
+                                                                 token=token,
+                                                                 http_url=ACCESS_TOKEN_URL)
+              signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
+              oauth_request.sign_request(signature_method, consumer, token)
+              url = oauth_request.to_url() 
+              result = urlfetch.fetch(url)
+              if result.status_code == 200:
+                  token = oauth.OAuthToken.from_string(result.content) 
+                  oauth_token.token_key = token.key
+                  oauth_token.token_secret = token.secret
+                  oauth_token.type = 'access'
+                  oauth_token.put()
+                  self.redirect('/')
+              else:
+                  self.response.out.write(result.content)
+          else:
+                  self.response.out.write('no go')
+
+
 
 def main():
   application = webapp.WSGIApplication([
@@ -107,6 +191,7 @@ def main():
     ('/todos', TodosPage),
     ('/todo/(.*)', TodoPage),
     ('/oauth', OAuthPage),
+    ('/oauth/token_ready', OAuthReadyPage),
   ], debug=_DEBUG)
   wsgiref.handlers.CGIHandler().run(application)
 

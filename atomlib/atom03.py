@@ -50,6 +50,16 @@ class Atom:
             elem.text = text
 
     @classmethod
+    def from_text(self,text):
+        atom = ET.XML(text)
+        if atom.tag == ATOM_NS + "feed":
+            return Feed(atom)
+        elif atom.tag == ATOM_NS + "entry":
+            return Entry(atom)
+        raise IOError("not an atom document")
+
+
+    @classmethod
     def retrieve(self,url,user='',passwd=''):
         h = httplib2.Http()
         if user and passwd:
@@ -130,6 +140,12 @@ class Atom:
             ln['length'] = link.get('length')
             links.append(ln)
         return links
+
+    def getAlt(self):
+        for link in self.getLinks():
+            if 'alternate' == link['rel']:
+                return link['href']
+        return 'no-alt'
 
     def addCategory(self,term,scheme='',label='',text=''):
         category = self.addElement('category')
@@ -248,3 +264,6 @@ class Entry(Atom):
 
     def getContent(self):
         return self.getText('content')
+
+    def getSummary(self):
+        return self.getText('summary')
