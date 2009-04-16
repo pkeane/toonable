@@ -57,10 +57,42 @@
 					<input type="radio" id="soon" name="priority" value="a2soon" checked>
 					<label for="sometime">sometime</label>
 					<input type="radio" id="sometime" name="priority" value="a3sometime">
+					<p>
+					<select name="project_name">
+						<option value="">select a project</option>
+						<option value="">one</option>
+						<option value="">two</option>
+						<option value="">three</option>
+					</select>
+					<select name="context_name">
+						<option value="">select a context</option>
+						<option value="">one</option>
+						<option value="">two</option>
+						<option value="">three</option>
+					</select>
+					</p>
+					<p>
+					<input type="submit" value="add todo">
+					</p>
 				</fieldset>
-				<p>
-				<input type="submit" value="add">
-				</p>
+			</form>
+			<form action="projects" method="post">
+				<fieldset>
+					<legend>new project</legend>
+					<p>
+					<input type="text" name="text" id="name">
+					<input type="submit" value="add project">
+					</p>
+				</fieldset>
+			</form>
+			<form action="contexts" method="post">
+				<fieldset>
+					<legend>new context</legend>
+					<p>
+					<input type="text" name="text" id="name">
+					<input type="submit" value="add context">
+					</p>
+				</fieldset>
 			</form>
 		</td>
 	</tr>
@@ -68,7 +100,7 @@
 		<td class="left">
 		</td>
 		<td class="center">
-			<h3>{{ mail_feed.title }}</h3>
+			<h3>{{ mail_feed.title }} {% if cache %}(cache){% endif %}</h3>
 			<dl id="mail">
 				{% for entry in mail_feed.entries %}
 				<dt><a href="{{ entry.alt }}">{{ entry.title }}</a></dt>

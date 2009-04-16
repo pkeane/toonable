@@ -37,6 +37,17 @@ class Todo(db.Model):
   text = db.StringProperty(required=True)
   priority = db.StringProperty(required=True,choices = set(["a1asap","a2soon","a3sometime"]))
   created = db.DateTimeProperty(auto_now_add=True)
+  project = db.ReferenceProperty(Project)
+  context = db.ReferenceProperty(Context)
+
+class Project(db.Model):
+  name = db.StringProperty(required=True)
+
+class Context(db.Model):
+  name = db.StringProperty(required=True)
+
+class Mail(db.Model):
+  text = db.TextProperty(required=True)
 
 class OAuthToken(db.Model):
     user = db.UserProperty()
@@ -71,32 +82,44 @@ class TodosPage(BaseRequestHandler):
 
   @login_required
   def get(self):
+      cache=False
       mail_feed = ''
-      t = OAuthToken.all()
-      t.filter("user =",users.GetCurrentUser())
-      t.filter("scope =", SCOPE)
-      t.filter("type =", 'access')
-      results = t.fetch(1)
-      for oauth_token in results:
-          if oauth_token.token_key:
-              key = oauth_token.token_key
-              mail_feed = oauth_token.token_key
-              secret = oauth_token.token_secret
-              token = oauth.OAuthToken(key,secret)
-              consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
-              oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
-                                                                         token=token,
-                                                                         http_url=SCOPE)
-              signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
-              oauth_request.sign_request(signature_method, consumer, token)
-              result = urlfetch.fetch(url=SCOPE,
-                                      method=urlfetch.GET,
-                                      headers=oauth_request.to_header())
-              mail_feed = atomlib.atom03.Atom.from_text(result.content) 
-      if not oauth_token:
-          self.redirect('/oauth')
+      if self.request.get('usecache'):
+          mail_feed = atomlib.atom03.Atom.from_text(Mail.all().get().text.encode("utf-8"))
+          cache=True
+      else:
+          t = OAuthToken.all()
+          t.filter("user =",users.GetCurrentUser())
+          t.filter("scope =", SCOPE)
+          t.filter("type =", 'access')
+          results = t.fetch(1)
+          for oauth_token in results:
+              if oauth_token.token_key:
+                  key = oauth_token.token_key
+                  mail_feed = oauth_token.token_key
+                  secret = oauth_token.token_secret
+                  token = oauth.OAuthToken(key,secret)
+                  consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
+                  oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
+                                                                             token=token,
+                                                                             http_url=SCOPE)
+                  signature_method = oauth.OAuthSignatureMethod_HMAC_SHA1()
+                  oauth_request.sign_request(signature_method, consumer, token)
+                  result = urlfetch.fetch(url=SCOPE,
+                                          method=urlfetch.GET,
+                                          headers=oauth_request.to_header())
+                  mail_feed = atomlib.atom03.Atom.from_text(result.content) 
+                  m = Mail.all().get()
+                  if m:
+                      m.text = db.Text(result.content,"utf-8")
+                  else:
+                      m = Mail(text=unicode(result.content,"utf-8"))
+                  m.put()
+                  if not oauth_token:
+                      self.redirect('/oauth')
       todos = db.GqlQuery("SELECT * from Todo ORDER BY priority")
       self.generate('index.html', {
+          'cache': cache,
           'todos': todos,
           'mail_feed' : mail_feed,
       })
