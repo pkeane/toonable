@@ -3,8 +3,8 @@
 {% block head %}{% endblock %}
 
 {% block header %}
-<div class="login content">
-	<h1><a href="/">Toonable Tasks</a></h1>
+<div class="login">
+	<span id="current"></span> |
 	{% if user %}
 	<span class="item nickname">{{ user.nickname }}</span> |
 	<span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
@@ -12,6 +12,7 @@
 	<span class="item"><a href="{{ login_url|escape }}">Sign in</a></span>
 	{% endif %}
 </div>
+<h1><a href="/">Toonable Tasks</a></h1>
 {% endblock %}
 
 {% block content %}
@@ -104,7 +105,7 @@
 			<dl id="mail">
 				{% for entry in mail_feed.entries %}
 				<dt><a href="{{ entry.alt }}">{{ entry.title }}</a></dt>
-				</dd>{{ entry.summary }}</dd>
+				<dd>{{ entry.summary }}</dd>
 				{% endfor %}
 			</dl>
 		</td>

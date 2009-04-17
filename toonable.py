@@ -31,6 +31,12 @@ SCOPE = 'https://mail.google.com/mail/feed/atom'
 CONSUMER_KEY = 'toonable.appspot.com'  
 CONSUMER_SECRET = 'NdT5Uuut1ze6HYyRfFa+J3i0'
 
+class Project(db.Model):
+  name = db.StringProperty(required=True)
+
+class Context(db.Model):
+  name = db.StringProperty(required=True)
+
 class Todo(db.Model):
   """Represents a single todo.
   """
@@ -39,12 +45,6 @@ class Todo(db.Model):
   created = db.DateTimeProperty(auto_now_add=True)
   project = db.ReferenceProperty(Project)
   context = db.ReferenceProperty(Context)
-
-class Project(db.Model):
-  name = db.StringProperty(required=True)
-
-class Context(db.Model):
-  name = db.StringProperty(required=True)
 
 class Mail(db.Model):
   text = db.TextProperty(required=True)
@@ -117,7 +117,7 @@ class TodosPage(BaseRequestHandler):
                   m.put()
                   if not oauth_token:
                       self.redirect('/oauth')
-      todos = db.GqlQuery("SELECT * from Todo ORDER BY priority")
+      todos = db.GqlQuery("SELECT * from Todo ORDER BY priority, created DESC")
       self.generate('index.html', {
           'cache': cache,
           'todos': todos,

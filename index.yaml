@@ -11,8 +11,8 @@ indexes:
 # your application using appcfg.py.
 
 # Unused in query history -- copied from input.
-- kind: Note
+- kind: Todo 
   properties:
-  - name: slug
+  - name: priority 
   - name: created
     direction: desc

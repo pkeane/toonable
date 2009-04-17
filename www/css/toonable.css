@@ -4,6 +4,11 @@ body {
 	*/
 }
 
+span#current {
+	color: #666;
+	font-weight: bold;
+}
+
 h1 {
 	color: #fff;
 }
@@ -26,12 +31,12 @@ input[type='text'] {
 }
 
 #container {
-	margin: 8px 5px;
+	margin: 1px 5px;
 }
 
 table {
 	width: 100%;
-	border-spacing: 4px;
+	border-spacing: 1px;
 }
 
 table td {
@@ -41,20 +46,24 @@ table td {
 	line-height: 1.3em;
 }
 
-/* 525252 | 8a571a | e0a45c | 090501 */
+#header .login {
+	float: right;
+	margin-right: 0px;
+}
+
 #header {
-	padding: 3px;
+	font-family: verdana,sans-serif;
+	padding: 4px 10px;
 	background:#000; 
-	background:#600; 
-	color: #aaa;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
-	margin: 0px 4px;
+	background:#f60; 
+	background:#fea900; 
+	color: #000;
+	margin: 0px 1px;
 }
 
 #header a {
 	text-decoration: none;
-	color: #fff;
+	color: #000;
 }
 
 #header .content,#footer .content {
@@ -63,28 +72,32 @@ table td {
 	padding:0;
 }
 
+#header .content,#footer .content  h1 {
+	margin:0 1em;
+	margin-top:0;
+	padding:0;
+}
+
+#header h1  a{
+	font-size: 1.2em;
+}
+
 td.left {
 	padding: 1em;
-	background:#eee;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
 	margin-bottom: 2px; 
+	width:25%
 }
 
 td.center {
 	padding: 1em;
-	background:#ddd;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
 	margin-bottom: 2px; 
+	width:50%
 }
 
 td.right {
 	padding: 1em;
-	background:#999;
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px; 
 	margin-bottom: 2px; 
+	width:25%
 }
 
 #tertiary .content {
@@ -111,6 +124,16 @@ li {
 	list-style: none;
 }
 
+dt a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+dd {
+	color: #666;
+	padding-left: 10px;
+}
+
 li a {
 	text-decoration: none;
 	font-weight: bold;
@@ -128,5 +151,5 @@ li a.a2soon {
 	color: #666;
 }
 li a.a3sometime {
-	color: #fff;
+	color: #999;
 }

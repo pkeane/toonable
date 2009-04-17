@@ -3,7 +3,15 @@ Toonable = {};
 
 $(document).ready(function() {
 	Toonable.initDelete();
+	Toonable.setNow();
 });
+
+Toonable.setNow = function() {
+    var target = document.getElementById('current');
+    var d = new Date();
+    var ts = d.getTime()/1000;
+    target.innerHTML = d.toLocaleString();
+}
 
 
 Toonable.initDelete = function() {
