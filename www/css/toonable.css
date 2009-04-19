@@ -31,7 +31,7 @@ input[type='text'] {
 }
 
 #container {
-	margin: 1px 5px;
+	margin: 3px;
 }
 
 table {
@@ -58,7 +58,7 @@ table td {
 	background:#f60; 
 	background:#fea900; 
 	color: #000;
-	margin: 0px 1px;
+	margin: 0px;
 }
 
 #header a {
